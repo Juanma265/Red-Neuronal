@@ -1,29 +1,28 @@
-# Red Neuronal de Hopfield y Optimización Combinatoria (TSP)
+# Hopfield Neural Network & Combinatorial Optimization (TSP)
 
-Este proyecto implementa y analiza el modelo de memoria asociativa de **Hopfield** para variables discretas $s_i \in \{0, 1\}$, evaluando su dinámica estocástica (algoritmo de Metrópolis), la capacidad crítica de almacenamiento ($\alpha_c$) y su aplicación a la optimización combinatoria en el **Problema del Viajero (TSP)** mediante la red de Hopfield-Tank modificada.
+This project implements and analyzes the **Hopfield** associative memory model for discrete variables $s_i \in \{0, 1\}$, evaluating its stochastic dynamics (Metropolis algorithm), critical storage capacity ($\alpha_c$), and application to combinatorial optimization in the **Traveling Salesman Problem (TSP)** using a modified Hopfield-Tank network.
 
-> 📄 **Documentación completa:** El análisis teórico formal, diagramas de fases y deducciones detalladas están disponibles en [`docs/Red_Neuronal.pdf`](docs/Red_Neuronal.pdf).
-
----
-
-## 1. Estructura del Repositorio
-
-* **`docs/Red_Neuronal.pdf`**: Memoria técnica completa del proyecto.
-* **`red_neuronal.f90` / `red_neuronal_2.f90`**: Núcleo de simulación en Fortran 90. Implementa la regla de Hebb, el cálculo de solapamiento térmico $m^\mu$ y el muestreo de Metrópolis.
-* **`simulacion.py` / `solapamiento.py`**: Scripts de interfaz y control de simulación en Python.
-* **`Ajuste_Capacidad.py` / `Ajuste_Capacidad_3.py`**: Ajuste no lineal de curvas sigmoides (estadística de Fermi-Dirac) para la obtención de la fracción máxima de almacenamiento $\alpha_c$.
-* **`Viajero/`**: Módulo dedicado a la resolución del TSP:
-  * `viajero.f90`: Implementación de la minimización energética del Hamiltoniano del TSP con Simulated Annealing.
-  * `viajero_data.py`: Visualización 2D de las rutas y análisis estadístico de convergencia tras 1000 iteraciones.
-  * `capitales_ue.txt`: Coordenadas de las 10 capitales europeas analizadas.
+> 📄 **Full Documentation:** The formal theoretical analysis, phase diagrams, and detailed derivations are available in [`docs/Red_Neuronal.pdf`](docs/Red_Neuronal.pdf) *(in Spanish)*.
 
 ---
 
-## 2. Aspectos Físicos y Metodológicos
+## 1. Repository Structure
 
-* **Recuperación de Patrones:** Aprendizaje hebbiano y relajación energética hacia atractores estables mediante dinámica estocástica de Glauber/Metrópolis ($N=400$, imágenes de $20\times20$).
-* **Límite de Almacenamiento ($\alpha_c$):** Estudio sistemático del colapso de las cuencas de atracción para $N \in \{900, 1225, 1600\}$. Ajuste sigmoide:
+- **`docs/Red_Neuronal.pdf`**: Complete technical report of the project.
+- **`red_neuronal.f90` / `red_neuronal_2.f90`**: Core simulation engine in Fortran 90. Implements the Hebbian learning rule, thermal overlap calculation $m^\mu$, and Metropolis sampling.
+- **`simulacion.py` / `solapamiento.py`**: Python simulation control and interface scripts.
+- **`Ajuste_Capacidad.py` / `Ajuste_Capacidad_3.py`**: Nonlinear sigmoid curve fitting (Fermi-Dirac statistics) to determine the maximum storage fraction $\alpha_c$.
+- **`Viajero/`**: Dedicated module for solving the TSP:
+  - `viajero.f90`: Implementation of the TSP Hamiltonian energy minimization using Simulated Annealing.
+  - `viajero_data.py`: 2D route visualization and statistical convergence analysis over 1,000 iterations.
+  - `capitales_ue.txt`: Coordinates of the 10 European capitals analyzed.
+
+---
+
+## 2. Physical & Methodological Aspects
+
+- **Pattern Retrieval:** Hebbian learning and energy relaxation toward stable attractors via stochastic Glauber/Metropolis dynamics ($N=400$, $20\times20$ binary images).
+- **Storage Limit ($\alpha_c$):** Systematic study of attractor basin collapse for $N \in \{900, 1225, 1600\}$. Sigmoid fit:
   $$\overline{m}(\alpha) = \frac{1}{1 + \exp\left(\frac{\alpha - \alpha_c}{\Delta}\right)}$$
-  Validación con el límite teórico de Amit-Gutfreund-Sompolinsky ($\alpha_c \approx 0.138$).
-* **Problema del Viajero (TSP):** Formulación del Hamiltoniano con 4 restricciones geométricas/físicas ($E_A, E_B, E_C, E_D$). Calibración de hiperparámetros para sistemas discretos ($A=B=150$, $C=75$, $D=40$) junto a un esquema de enfriamiento simulado ($\gamma = 0.998$), alcanzando tasas de éxito $>94\%$ sin cruces topológicos.
-
+  Validated against the theoretical Amit-Gutfreund-Sompolinsky limit ($\alpha_c \approx 0.138$).
+- **Traveling Salesman Problem (TSP):** Hamiltonian formulation incorporating 4 geometric/physical constraints ($E_A, E_B, E_C, E_D$). Hyperparameter calibration for discrete systems ($A=B=150$, $C=75$, $D=40$) paired with a simulated annealing schedule ($\gamma = 0.998$), achieving $>94\%$ success rates with zero topological crossings.
